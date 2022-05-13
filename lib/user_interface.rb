@@ -25,19 +25,20 @@ class UserInterface
   end
 
   def ships_unplaced_message
-    return @game.unplaced_ships.map do |ship|
-      "#{ship.length}"
+    return @game.unplaced_ships.map.with_index do |ship, i|
+      "#{i + 1}. #{ship.ship_class}"
     end.join(", ")
   end
 
   def prompt_for_ship_placement
-    ship_length = prompt "Which do you wish to place?"
+    ship_num = prompt "Which do you wish to place?"
+    ship_length = @game.unplaced_ships[ship_num.to_i - 1].length
     ship_orientation = prompt "Vertical or horizontal? [vh]"
     ship_row = prompt "Which row?"
     ship_col = prompt "Which column?"
     show "OK."
     @game.place_ship(
-      length: ship_length.to_i,
+      length: ship_length,
       orientation: {"v" => :vertical, "h" => :horizontal}.fetch(ship_orientation),
       row: ship_row.to_i,
       col: ship_col.to_i
@@ -47,8 +48,8 @@ class UserInterface
   def format_board
     return (1..@game.rows).map do |y|
       (1..@game.cols).map do |x|
-        next "S" if @game.ship_at?(x, y)
-        next "."
+        next "S  " if @game.ship_at?(x, y)
+        next ".  "
       end.join
     end.join("\n")
   end

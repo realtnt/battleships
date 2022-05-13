@@ -9,12 +9,15 @@ RSpec.describe UserInterface do
       expect(io).to receive(:puts).with("Welcome to the game!")
       expect(io).to receive(:puts).with("Set up your ships first.")
       expect(game).to receive(:unplaced_ships).and_return([
-        double(:ship, length: 2),
-        double(:ship, length: 5),
+        double(:ship, length: 2, ship_class: 'Destroyer'),
+        double(:ship, length: 5, ship_class: 'Carrier'),
       ])
-      expect(io).to receive(:puts).with("You have these ships remaining: 2, 5")
+      expect(game).to receive(:unplaced_ships).and_return([
+        double(:ship, length: 2, ship_class: 'Destroyer')
+      ])
+      expect(io).to receive(:puts).with("You have these ships remaining: 1. Destroyer, 2. Carrier")
       expect(io).to receive(:puts).with("Which do you wish to place?")
-      expect(io).to receive(:gets).and_return("2\n")
+      expect(io).to receive(:gets).and_return("1\n")
       expect(io).to receive(:puts).with("Vertical or horizontal? [vh]")
       expect(io).to receive(:gets).and_return("v\n")
       expect(io).to receive(:puts).with("Which row?")
@@ -33,16 +36,16 @@ RSpec.describe UserInterface do
       allow(game).to receive(:ship_at?).with(2, 3).and_return(true)
       allow(game).to receive(:ship_at?).with(2, 4).and_return(true)
       expect(io).to receive(:puts).with([
-        "..........",
-        "..........",
-        ".S........",
-        ".S........",
-        "..........",
-        "..........",
-        "..........",
-        "..........",
-        "..........",
-        ".........."
+        ".  .  .  .  .  .  .  .  .  .  ",
+        ".  .  .  .  .  .  .  .  .  .  ",
+        ".  S  .  .  .  .  .  .  .  .  ",
+        ".  S  .  .  .  .  .  .  .  .  ",
+        ".  .  .  .  .  .  .  .  .  .  ",
+        ".  .  .  .  .  .  .  .  .  .  ",
+        ".  .  .  .  .  .  .  .  .  .  ",
+        ".  .  .  .  .  .  .  .  .  .  ",
+        ".  .  .  .  .  .  .  .  .  .  ",
+        ".  .  .  .  .  .  .  .  .  .  "
       ].join("\n"))
       interface.run
     end
