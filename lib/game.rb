@@ -3,26 +3,19 @@ require 'ship'
 class Game
   attr_reader :rows
   attr_reader :cols
-  def initialize(ship = Ship, rows = 10, cols = 10)
-    @ship = ship
+  def initialize(rows = 10, cols = 10)
     @rows = rows
     @cols = cols
-    @unplaced_ships = [
-      @ship.new(ship_class: 'Carrier', length: 5), 
-      @ship.new(ship_class: 'Battleship', length: 4),
-      @ship.new(ship_class: 'Cruiser', length: 3), 
-      @ship.new(ship_class: 'Submarine', length: 3), 
-      @ship.new(ship_class: 'Destroyer', length: 2)
-    ]
-    @placed_ships = []
+    @players = [Player.new, Player.new]
+    @turn = 0
   end
 
   def unplaced_ships
-    @unplaced_ships
+    @players[@turn].unplaced_ships
   end
 
   def place_ship(length:, orientation:, row:, col:)
-    @unplaced_ships.each do |ship|
+    @players[turn].unplaced_ships.each do |ship|
       if ship.length == length
         length.times do |i|
           if orientation == :vertical
@@ -31,8 +24,8 @@ class Game
             ship.coords << [col + i, row]
           end
         end
-        @placed_ships << ship
-        @unplaced_ships.delete(ship)
+        @players[turn].placed_ships << ship
+        @players[turn].unplaced_ships.delete(ship)
         break
       end
     end

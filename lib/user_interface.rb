@@ -6,6 +6,7 @@ class UserInterface
 
   def run
     show "Welcome to the game!"
+    prompt_for_player_name
     show "Set up your ships first."
     show "You have these ships remaining: #{ships_unplaced_message}"
     prompt_for_ship_placement
@@ -46,11 +47,16 @@ class UserInterface
   end
 
   def format_board
+    ##### replace with BoardRenderer
     return (1..@game.rows).map do |y|
       (1..@game.cols).map do |x|
         next "S  " if @game.ship_at?(x, y)
         next ".  "
       end.join
     end.join("\n")
+  end
+
+  def prompt_for_player_name
+    # get name and pass it to @game.<player>.name
   end
 end
